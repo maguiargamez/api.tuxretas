@@ -1,0 +1,63 @@
+created:
+    - database/factories/ClientFactory.php
+    - database/factories/CoachingStaffTypeFactory.php
+    - database/factories/CountryFactory.php
+    - database/factories/StateFactory.php
+    - database/factories/MunicipalityFactory.php
+    - database/factories/LeagueFactory.php
+    - database/factories/CourtFactory.php
+    - database/factories/TournamentFactory.php
+    - database/factories/TeamFactory.php
+    - database/factories/PlayerFactory.php
+    - database/factories/CoachingStaffFactory.php
+    - database/factories/MatchFactory.php
+    - database/factories/MatchGoalFactory.php
+    - database/factories/RefereeFactory.php
+    - database/factories/LeagueRefereeFactory.php
+    - database/migrations/2023_03_14_205431_create_clients_table.php
+    - database/migrations/2023_03_14_205432_create_coaching_staff_types_table.php
+    - database/migrations/2023_03_14_205433_create_countries_table.php
+    - database/migrations/2023_03_14_205434_create_states_table.php
+    - database/migrations/2023_03_14_205435_create_municipalities_table.php
+    - database/migrations/2023_03_14_205436_create_leagues_table.php
+    - database/migrations/2023_03_14_205437_create_courts_table.php
+    - database/migrations/2023_03_14_205438_create_tournaments_table.php
+    - database/migrations/2023_03_14_205439_create_teams_table.php
+    - database/migrations/2023_03_14_205440_create_players_table.php
+    - database/migrations/2023_03_14_205441_create_coaching_staff_table.php
+    - database/migrations/2023_03_14_205442_create_matches_table.php
+    - database/migrations/2023_03_14_205443_create_match_goals_table.php
+    - database/migrations/2023_03_14_205444_create_referees_table.php
+    - database/migrations/2023_03_14_205445_create_league_referees_table.php
+    - app/Models/Client.php
+    - app/Models/CoachingStaffType.php
+    - app/Models/Country.php
+    - app/Models/State.php
+    - app/Models/Municipality.php
+    - app/Models/League.php
+    - app/Models/Court.php
+    - app/Models/Tournament.php
+    - app/Models/Team.php
+    - app/Models/Player.php
+    - app/Models/CoachingStaff.php
+    - app/Models/Match.php
+    - app/Models/MatchGoal.php
+    - app/Models/Referee.php
+    - app/Models/LeagueReferee.php
+models:
+    User: {  }
+    Client: { firstname: 'string:255', lastname: 'string:255', date_of_birth: date, sex: boolean, photo: 'string:100 nullable', email: 'string:100 nullable', phone: 'string:100 nullable', is_active: boolean, softdeletes: softDeletes, relationships: { hasMany: League } }
+    CoachingStaffType: { name: 'string:255 unique', short_code: 'char:4 unique', is_active: boolean, softdeletes: softDeletes }
+    Country: { key: 'string:2 unique', name: 'string:255', nationality: 'string:255', is_active: boolean, softdeletes: softDeletes, relationships: { hasMany: State } }
+    State: { country_id: 'id foreign', key: 'string:5 unique', name: 'string:255', short: 'string:8', is_active: boolean, softdeletes: softDeletes, relationships: { hasMany: Municipality } }
+    Municipality: { state_id: 'id foreign', key: 'string:5 unique', name: 'string:255', is_active: boolean, softdeletes: softDeletes, relationships: { hasMany: League } }
+    League: { client_id: 'id foreign', municipality_id: 'id foreign', name: 'string:255 unique', public_name: 'string:255', is_active: boolean, softdeletes: softDeletes, relationships: { hasMany: Tournament } }
+    Court: { municipality_id: 'id foreign', name: 'string:255 unique', address: 'string:255', phone: 'string:255 nullable', gps_location: 'string:255 nullable', is_active: boolean, softdeletes: softDeletes, relationships: { hasMany: Tournament } }
+    Tournament: { league_id: 'id foreign', name: 'string:255 unique', public_name: 'string:255', short_code: 'char:4', sequence: integer, promotion_zone: smallinteger, relegation_zone: smallinteger, featured_position: boolean, hide_ranking: boolean, hide_players: boolean, hide_field: boolean, is_active: boolean, softdeletes: softDeletes, relationships: { hasMany: Team } }
+    Team: { tournament_id: 'id foreign', name: 'string:255 unique', public_name: 'string:255', short_code: 'char:4', logo: 'string:255', owner: 'string:255 nullable', owner_email: 'string:100 nullable', owner_phone: 'string:100 nullable', about: text, archive_team: boolean, is_active: boolean, softdeletes: softDeletes, relationships: { hasMany: 'Player, CoachingStaff' } }
+    Player: { team_id: 'id foreign', firstname: 'string:255', lastname: 'string:255', date_of_birth: date, sex: boolean, photo: 'string:100 nullable', email: 'string:100 nullable', phone: 'string:100 nullable', number: smallinteger, position: 'char:4', is_active: boolean, softdeletes: softDeletes, relationships: { hasMany: MatchGol } }
+    CoachingStaff: { team_id: 'id foreign', coaching_staff_type: 'char:4', firstname: 'string:255', lastname: 'string:255', date_of_birth: date, sex: boolean, email: 'string:100 nullable', phone: 'string:100 nullable', is_active: boolean, softdeletes: softDeletes }
+    Match: { tournament_id: 'id foreign', referee_id: 'id foreign', home_team_id: 'id foreign', home_team: 'string:255', away_team_id: 'id foreign', away_team: 'string:255', score: 'string:100 nullable', softdeletes: softDeletes, relationships: { hasMany: MatchGol } }
+    MatchGoal: { match_id: 'id foreign', player_id: 'id foreign', player_name: 'string:255', number: smallinteger, position: 'char:4', minute: smallinteger, is_penalty: boolean, penalty_shoots: boolean, softdeletes: softDeletes }
+    Referee: { firstname: 'string:255', lastname: 'string:255', date_of_birth: date, sex: boolean, photo: 'string:100 nullable', email: 'string:100 nullable', phone: 'string:100 nullable', is_active: boolean, softdeletes: softDeletes }
+    LeagueReferee: { league_id: 'id foreign', referee_id: 'id foreign', is_active: boolean, softdeletes: softDeletes }
